@@ -5,6 +5,8 @@ import Board from "./Board";
 
 type GameProps = {
   opponents: [Player, Player];
+  onWin: (winner: Player) => void;
+  gameNumber: number;
 };
 
 const initialBoard: BoardValues = [
@@ -13,7 +15,7 @@ const initialBoard: BoardValues = [
   ["", "", ""],
 ];
 
-const Game: React.FC<GameProps> = ({ opponents }) => {
+const Game: React.FC<GameProps> = ({ opponents, onWin, gameNumber }) => {
   const [board, setBoard] = useState<BoardValues>(initialBoard);
   const [currentPlayer, setCurrentPlayer] = useState<Player>(opponents[0]);
   const [winner, setWinner] = useState<Player>();
@@ -28,17 +30,20 @@ const Game: React.FC<GameProps> = ({ opponents }) => {
         const row = board[i];
         const valToCheck = row[0];
         if (row[0] !== "" && row.every((cellVal) => cellVal === row[0])) {
+          let winner: Player;
           if (valToCheck === "x") {
-            setWinner(opponents[0]);
+            winner = opponents[0];
           } else {
-            setWinner(opponents[1]);
+            winner = opponents[1];
           }
+          setWinner(winner);
+          onWin(winner);
           return true;
         }
       }
       return false;
     },
-    [opponents]
+    [opponents, onWin]
   );
 
   const transpose = (board: BoardValues): BoardValues => {
@@ -80,13 +85,16 @@ const Game: React.FC<GameProps> = ({ opponents }) => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "20px",
       }}
     >
-      <div>
+      <h4>
         {opponents[0].name} vs. {opponents[1].name}
-      </div>
-      <Board board={board} onCellClick={handleCellClick}></Board>
+      </h4>
+      <Board
+        gameNumber={gameNumber}
+        board={board}
+        onCellClick={handleCellClick}
+      />
       {winner && <div>Winner: {winner.name}</div>}
       {turns === 9 && !!!winner && <div>No winner</div>}
     </div>

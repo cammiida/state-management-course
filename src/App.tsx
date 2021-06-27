@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import "./App.css";
+import React, { useCallback, useState } from "react";
 import Game from "./components/Game";
 import Leaderboard from "./components/Leaderboard";
 import { Player } from "./types";
@@ -12,9 +11,25 @@ const initialPlayers: Player[] = [
 
 const App = () => {
   const [players, setPlayers] = useState<Player[]>(initialPlayers);
-  const [games, setGames] = useState();
+  const [games] = useState<[Player, Player][]>([
+    [players[0], players[1]],
+    [players[0], players[2]],
+    [players[1], players[2]],
+  ]);
 
-  const handleWin = (player: Player) => {};
+  const handleWin = useCallback((player: Player) => {
+    setPlayers((oldPlayers) => {
+      const newPlayers = oldPlayers.map((oldPlayer) => ({ ...oldPlayer }));
+      const playerIdx = newPlayers.findIndex(
+        (newPlayer) => newPlayer.id === player.id
+      );
+      newPlayers[playerIdx] = {
+        ...newPlayers[playerIdx],
+        gamesWon: newPlayers[playerIdx].gamesWon + 1,
+      };
+      return newPlayers;
+    });
+  }, []);
 
   return (
     <div
@@ -32,9 +47,14 @@ const App = () => {
           The Terrific Tic Tac Toe Tournament
         </h1>
         <div style={{ display: "flex", gap: "40px" }}>
-          <Game opponents={[players[0], players[1]]} />
-          <Game opponents={[players[0], players[2]]} />
-          <Game opponents={[players[1], players[2]]} />
+          {games.map((game, idx) => (
+            <Game
+              key={`${game[0].name}-${game[1].name}`}
+              onWin={handleWin}
+              opponents={game}
+              gameNumber={idx}
+            />
+          ))}
         </div>
       </div>
       <Leaderboard players={players} />

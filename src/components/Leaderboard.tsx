@@ -15,14 +15,14 @@ const Leaderboard: React.FC<LeaderboardProps> = ({
         marginLeft: "auto",
         padding: "0 50px",
         borderLeft: "1px solid black",
-        backgroundColor: "bisque",
+        backgroundColor: "#F1F8FA",
       }}
     >
       <h2>Leaderboard</h2>
       {players
         .sort((a, b) => b.gamesWon - a.gamesWon)
         .map((player) => (
-          <PlayerDetail player={player} />
+          <PlayerDetail key={player.id} player={player} />
         ))}
     </div>
   );

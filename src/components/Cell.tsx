@@ -13,14 +13,14 @@ const Cell: React.FC<CellProps> = ({ value, onClick }: CellProps) => {
         height: "50px",
         width: "50px",
         border: "1px solid black",
-        backgroundColor: "beige",
+        backgroundColor: "#FD414D",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
       onClick={onClick}
     >
-      {value}
+      <b>{value}</b>
     </div>
   );
 };

@@ -5,16 +5,21 @@ import Cell from "./Cell";
 type BoardProps = {
   board: BoardValues;
   onCellClick: (rowIdx: number, colIdx: number) => void;
+  gameNumber: number;
 };
 
-const Board: React.FC<BoardProps> = ({ board, onCellClick }: BoardProps) => {
+const Board: React.FC<BoardProps> = ({
+  board,
+  onCellClick,
+  gameNumber,
+}: BoardProps) => {
   return (
     <div>
       {board.map((row, rowIdx) => (
-        <div style={{ display: "flex" }}>
+        <div key={`${gameNumber}-${rowIdx}`} style={{ display: "flex" }}>
           {row.map((cellValue, colIdx) => (
             <Cell
-              key={`${rowIdx}-${colIdx}`}
+              key={`${gameNumber}-${rowIdx}-${colIdx}`}
               value={cellValue}
               onClick={() => onCellClick(rowIdx, colIdx)}
             />
